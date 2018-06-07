@@ -2,6 +2,18 @@ from PIL import Image
 import math
 import re
 
+class Vertice(object):
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def show(self, color = None):
+        pixels[self.x, scrY-self.y] = color or (255, 255, 255)
+
+    def copy(self):
+        return Vertice(self.x, self.y)
+
 class Facet:
     def __init__(self):
         self.vertices = []
@@ -23,7 +35,7 @@ def ReadingObj(f):
             x = float(x)
             y = float(y)
             z = float(z)
-            vertices.append( [x,y,z] )
+            vertices.append(Vertice(x,y,z))
             leng = math.sqrt(x**2 + y**2 + z**2)
             if leng > maxLeng:
                 maxLeng = leng
@@ -42,10 +54,8 @@ def ReadingObj(f):
                 resObj.normal.append(verticesNorm[tempEl[2]-1])
             # print (resObj.vertices)
             # data = map(lambda dataRow: map(lambda someString: int(someString), dataRow), dataArr)
-            resObj.vertices
             facets.append(resObj)
     for vertice in vertices:
-        for i in range(2):
-            vertice[i] = vertice[i]/maxLeng
+        vertice.x = vertice.x/maxLeng
+        vertice.y = vertice.y/maxLeng
     return vertices, facets, verticesNorm
-    # pixels[scrX-(vertice[0]*scrX/2), scrY-(vertice[1]*scrY/2)] = color
