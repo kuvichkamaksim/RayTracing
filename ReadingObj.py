@@ -27,10 +27,10 @@ class Vertice(object):
 def fillTriangle(coords):
     v1, v2, v3 = sorted(coords, key = lambda v: v.y)
     p1 = v1.copy()
-    delta1 = float(b.x - a.x)/(b.y - a.y)
+    delta1 = float(v2.x - v1.x)/(v2.y - v1.y)
     p2 = v2.copy()
-    delta2 = float(c.x - b.x)/(c.y - b.y)
-    for y in (b.y, c.y):
+    delta2 = float(v3.x - v2.x)/(v3.y - v2.y)
+    for y in (v2.y, v3.y):
         while p1.y < y:
             if p1.x > p2.x:
                 p3 = p2.copy()
@@ -45,7 +45,8 @@ def fillTriangle(coords):
             p1.x += delta1
             p2.y += 1
             p2.x += delta2
-        delta1 = float(c.x - b.x)/(c.y - b.y)
+        delta1 = float(v3.x - v2.x)/(v3.y - v2.y)
+        p1 = v2.copy
 
 
 maxLeng = 0.0
