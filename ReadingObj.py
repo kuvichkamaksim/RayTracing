@@ -2,17 +2,6 @@ from PIL import Image
 import math
 import re
 
-scrX = 800
-scrY = 800
-
-img = Image.new( 'RGB', (scrX+1, scrY+1), "black")
-pixels = img.load()
-color = (255,255,255)
-
-f = open("./data/Patricio.obj", 'r')
-# f = open("./data/legoman.obj", 'r')
-lines = f.read()
-
 class Vertice(object):
     def __init__(self, x, y, z):
         self.x = x
@@ -25,33 +14,48 @@ class Vertice(object):
     def copy(self):
         return Vertice(self.x, self.y)
 
-maxLeng = 0.0
-vertices = []
-facets = []
-verticesNorm = []
-for line in lines.split('\n'):
+class Facet:
+    def __init__(self):
+        self.vertices = []
+        self.texture = []
+        self.normal = []
 
-    indent = line.split(' ')[0]
-    if indent == 'v':
-        v, x, y, z = re.split('\s+', line)
-        x = float(x)
-        y = float(y)
-        z = float(z)
-        vertices.append(Vertice(x,y,z))
-        leng = math.sqrt(x**2 + y**2 + z**2)
-        if leng > maxLeng:
-            maxLeng = leng
+def ReadingObj(f):
+    lines = f.read()
 
-    if indent == 'f':
-        if len(re.split('\s+', line)) == 5:
-            f, v1, v2, v3, v4 = re.split('\s+', line)
-        else:
-            f, v1, v2, v3 = re.split('\s+', line)
+    maxLeng = 0.0
+    vertices = []
+    facets = []
+    verticesNorm = []
+    for line in lines.split('\n'):
 
+        indent = line.split(' ')[0]
+        if indent == 'v':
+            v, x, y, z = re.split('\s+', line)
+            x = float(x)
+            y = float(y)
+            z = float(z)
+            vertices.append(Vertice(x,y,z))
+            leng = math.sqrt(x**2 + y**2 + z**2)
+            if leng > maxLeng:
+                maxLeng = leng
 
-for vertice in vertices:
-    vertice.x = vertice.x/maxLeng + 1
-    vertice.y = vertice.y/maxLeng + 1
-    pixels[int(vertice.x*scrX/2), int(scrY-(vertice.y*scrY/2))] = color
+        if indent == 'vn':
+            verticesNorm.append(line.strip('\n').split(' '))
 
-img.show()
+        if indent == 'f':
+            tempArr = line.strip().split(' ')
+            tempArr.pop(0)
+            resObj = Facet()
+            for vert in tempArr:
+                tempEl = list(map(lambda el: int(el) if len(el) else 0 , vert.split('/')))
+                resObj.vertices.append(vertices[tempEl[0]-1])
+                resObj.texture.append(tempEl[1])
+                resObj.normal.append(verticesNorm[tempEl[2]-1])
+            # print (resObj.vertices)
+            # data = map(lambda dataRow: map(lambda someString: int(someString), dataRow), dataArr)
+            facets.append(resObj)
+    for vertice in vertices:
+        vertice.x = vertice.x/maxLeng
+        vertice.y = vertice.y/maxLeng
+    return vertices, facets, verticesNorm
