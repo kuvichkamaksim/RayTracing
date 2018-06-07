@@ -9,6 +9,6 @@ def CreateBMP(scrX, scrY, vertices):
     color = (255,255,255)
 
     for vertice in vertices:
-        pixels[scrX-(vertice[0]*scrX/2), scrY-(vertice[1]*scrY/2)] = color
+        pixels[scrX-((vertice[0]+1)*scrX/2), scrY-((vertice[1]+1)*scrY/2)] = color
 
     img.show()
