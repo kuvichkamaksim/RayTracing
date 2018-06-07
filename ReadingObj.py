@@ -14,40 +14,16 @@ f = open("./data/Patricio.obj", 'r')
 lines = f.read()
 
 class Vertice(object):
-    def __init__(self, x, y):
+    def __init__(self, x, y, z):
         self.x = x
         self.y = y
+        self.z = z
 
     def show(self, color = None):
         pixels[self.x, scrY-self.y] = color or (255, 255, 255)
 
     def copy(self):
         return Vertice(self.x, self.y)
-
-def fillTriangle(coords):
-    v1, v2, v3 = sorted(coords, key = lambda v: v.y)
-    p1 = v1.copy()
-    delta1 = float(v2.x - v1.x)/(v2.y - v1.y)
-    p2 = v2.copy()
-    delta2 = float(v3.x - v2.x)/(v3.y - v2.y)
-    for y in (v2.y, v3.y):
-        while p1.y < y:
-            if p1.x > p2.x:
-                p3 = p2.copy()
-                x = p1.x
-            else:
-                p3 = p1.copy()
-                x = p2.x
-            while p3.x < x:
-                p3.show()
-                p3.x += 1
-            p1.y += 1
-            p1.x += delta1
-            p2.y += 1
-            p2.x += delta2
-        delta1 = float(v3.x - v2.x)/(v3.y - v2.y)
-        p1 = v2.copy
-
 
 maxLeng = 0.0
 vertices = []
@@ -61,7 +37,7 @@ for line in lines.split('\n'):
         x = float(x)
         y = float(y)
         z = float(z)
-        vertices.append( [x,y,z] )
+        vertices.append(Vertice(x,y,z))
         leng = math.sqrt(x**2 + y**2 + z**2)
         if leng > maxLeng:
             maxLeng = leng
@@ -74,8 +50,8 @@ for line in lines.split('\n'):
 
 
 for vertice in vertices:
-    for i in range(2):
-        vertice[i] = vertice[i]/maxLeng + 1
-    pixels[int(vertice[0]*scrX/2), int(scrY-(vertice[1]*scrY/2))] = color
+    vertice.x = vertice.x/maxLeng + 1
+    vertice.y = vertice.y/maxLeng + 1
+    pixels[int(vertice.x*scrX/2), int(scrY-(vertice.y*scrY/2))] = color
 
 img.show()
