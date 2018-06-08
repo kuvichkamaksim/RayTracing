@@ -3,6 +3,9 @@ from ReadingObj import ReadingObj
 
 scrX = 800
 scrY = 800
+camera = (0.25, -1, 0.3)
+direction = (0, 1, 0)
+lightPos = (10, -10, 10)
 
 f = open("./data/cow.obj", 'r')
 

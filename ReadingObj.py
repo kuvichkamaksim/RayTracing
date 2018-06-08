@@ -2,23 +2,19 @@ from PIL import Image
 import math
 import re
 
-class Vertice:
-    def __init__(self, x, y, z):
-        self.x = x
-        self.y = y
-        self.z = z
-
-    def show(self, pixs, color = None):
-        pixs[self.x, scrY-self.y] = color or (255, 255, 255)
-
-    def copy(self):
-        return Vertice(self.x, self.y, self.z)
+def vectorLength(v):
+    return math.sqrt(v.x**2 + v.y**2 + v.z**2)
 
 class Facet:
     def __init__(self):
         self.vertices = []
-        self.texture = []
         self.normal = []
+
+    def show(self):
+        for vert in self.vertices:
+            print (vert[0], vert[1], vert[2])
+        for norm in self.normal:
+            print (norm)
 
 def ReadingObj(f):
     lines = f.read()
@@ -35,7 +31,7 @@ def ReadingObj(f):
             x = float(x)
             y = float(y)
             z = float(z)
-            vertices.append(Vertice(x,y,z))
+            vertices.append( [x,y,z] )
             leng = math.sqrt(x**2 + y**2 + z**2)
             if leng > maxLeng:
                 maxLeng = leng
@@ -56,25 +52,32 @@ def ReadingObj(f):
 
                 if (len(tempEl) == 3):
                     resObj.vertices.append(vertices[tempEl[0]-1])
-                    resObj.texture.append(tempEl[1])
                     resObj.normal.append(verticesNorm[tempEl[2]-1])
                 else:
                     resObj.vertices.append(vertices[tempEl[0]-1])
                     try:
                         resObj.normal.append(verticesNorm[tempEl[1]-1])
                     except:
-                        print(tempEl[1]-1)
+                        pass
             # print (resObj.vertices)
             # data = map(lambda dataRow: map(lambda someString: int(someString), dataRow), dataArr)
+            a = b = c = 0
+            for norm in resObj.normal:
+                a += norm[0]
+                b += norm[1]
+                c += norm[2]
+            l = math.sqrt(a**2 + b**2 + c**2)
+            resObj.normal = [a/l, b/l, c/l]
+            # print (resObj.normal)
 
             facets.append(resObj)
 
     for vertice in vertices:
-        vertice.x = (vertice.x/maxLeng +1)*400
-        vertice.y = (vertice.y/maxLeng +1)*400
+        vertice[0] = vertice[0]/maxLeng
+        vertice[1] = vertice[1]/maxLeng
+        vertice[2] = vertice[2]/maxLeng
 
-    # for facet in facets:
-    #     for vertice in facet.vertices:
-    #         print(vertice.x, vertice.y)
+    for facet in facets:
+        facet.show()
 
     return vertices, facets, verticesNorm

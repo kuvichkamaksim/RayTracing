@@ -33,8 +33,9 @@ def fillTriangle(verts, pixelArr, screenWidth, screenHeight, normals):
                 try:
                     pixelArr[x, screenHeight-y] = (col, col, col)
                 except :
-                    print(int(x), screenHeight-y)
-                    print('eeeer1')
+                    # print(int(x), screenHeight-y)
+                    # print('eeeer1')
+                    pass
         i = 0
         for y in reversed(range(int((v2.y+1)*screenHeight/2), int((v3.y+1)*screenHeight/2))):
             # print(int((p1.x+1)*screenWidth/2), int((p1.x+1 + i*delta1)*screenWidth/2))
@@ -48,11 +49,11 @@ def fillTriangle(verts, pixelArr, screenWidth, screenHeight, normals):
                 try:
                     pixelArr[x, screenHeight-y] = (col, col, col)
                 except :
-                    print(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y)
-                    print(int(x), screenHeight-y)
-                    print("eeeeer2")
+                    # print(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y)
+                    # print(int(x), screenHeight-y)
+                    # print("eeeeer2")
+                    pass
 
 
 def zeroDiv(a, b):
     return (float(a)/b) if b != 0 else 0
-
