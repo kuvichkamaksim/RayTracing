@@ -53,10 +53,20 @@ def ReadingObj(f):
             resObj = Facet()
             for vert in tempArr:
                 tempEl = list(map(lambda el: int(el) if len(el) else 0 , vert.split('/')))
-                resObj.vertices.append(vertices[tempEl[0]-1])
-                resObj.texture.append(tempEl[1])
-                resObj.normal.append(verticesNorm[tempEl[2]-1])
-            # print (resObj.vertices[0].y)
+
+                if (len(tempEl) == 3):
+                    resObj.vertices.append(vertices[tempEl[0]-1])
+                    resObj.texture.append(tempEl[1])
+                    resObj.normal.append(verticesNorm[tempEl[2]-1])
+                else:
+                    resObj.vertices.append(vertices[tempEl[0]-1])
+                    try:
+                        resObj.normal.append(verticesNorm[tempEl[1]-1])
+                    except:
+                        print(tempEl[1]-1)
+            # print (resObj.vertices)
+            # data = map(lambda dataRow: map(lambda someString: int(someString), dataRow), dataArr)
+
             facets.append(resObj)
 
     for vertice in vertices:
