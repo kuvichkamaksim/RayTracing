@@ -1,5 +1,6 @@
 import math
 import re
+import random
 from PIL import Image
 
 
@@ -22,7 +23,7 @@ class Vertice(object):
 
 scrX = 800
 scrY = 800
-someA = Vertice(-1,1,-1)
+someA = Vertice(0.3,-1,-1)
 someB = Vertice(0,0,0)
 someC = Vertice(1,1,1)
 
@@ -39,63 +40,54 @@ for vertice in testArr:
 
 
 def fillTriangle(verts, pixelArr, screenWidth, screenHeight):
+    col = random.randint(0, 255)
     # for vert in verts:
     #     print (vert.x, vert.y)
+    # print (screenHeight)
     v1, v2, v3 = sorted(verts, key = lambda v: v.y)
     print (v1.x, v1.y,";", v2.x, v2.y, ";", v3.x, v3.y)
     p1 = v1.copy()
     delta1 = (zeroDiv((v2.x - v1.x), (v2.y - v1.y)))
-    print (delta1)
-    p2 = v2.copy()
     delta2 = (zeroDiv((v1.x - v3.x), (v1.y - v3.y)))
-    print (delta2)
+    print (delta1, delta2)
+    p2 = v2.copy()
+    p3 = v3.copy()
+    delta3 = (zeroDiv((v2.x - v3.x), (v3.y - v2.y)))
+    delta4 = (zeroDiv((v1.x - v3.x), (v3.y - v1.y)))
+    print (delta3, delta4)
+
     i = 0
-    for y in range(int((p1.y+1)*screenHeight/2), int((v3.y+1)*screenHeight/2)):
+    for y in range(int((p1.y+1)*screenHeight/2), int((v2.y+1)*screenHeight/2)):
         # print(int((p1.x+1)*screenWidth/2), int((p1.x+1 + i*delta1)*screenWidth/2))
         i +=1
-        pixelArr[int((p1.x+1)*screenWidth/2 + i*delta2), screenHeight-int(y)] = (255, 255, 255)
+        # pixelArr[int((p1.x+1)*screenWidth/2 + i*delta2), screenHeight-int(y)] = (255, 255, 255)
         for x in range(int((p1.x+1)*screenWidth/2 + i*delta1), int((p1.x+1 )*screenWidth/2+ i*delta2)):
-            print(int(x), int(y))
             try:
-                pixelArr[int(x), screenHeight-int(y)] = (255, 255, 255)
-
+                pixelArr[x, screenHeight-y] = (col, col, col)
             except :
-                raise
+                # print(int(x), y, screenHeight, screenHeight-y)
+                print('eeeer')
+    i = 0
+    for y in reversed(range(int((v2.y+1)*screenHeight/2), int((v3.y+1)*screenHeight/2))):
+        # print(int((p1.x+1)*screenWidth/2), int((p1.x+1 + i*delta1)*screenWidth/2))
+        # print("cont")
+        i +=1
+        # for x in range(screenWidth):
+        #     pixelArr[x, screenHeight-y] = (255, 255, 255)
+        # pixelArr[int((v3.x+1)*screenWidth/2 + i*delta3), int((p2.x+1 )*screenWidth/2+ i*delta4)] = (255, 255, 255)
+        for x in range(int((v3.x+1)*screenWidth/2 + i*delta3), int((p3.x+1 )*screenWidth/2+ i*delta4)):
+            # print(int(x), int(y))
+            try:
+                pixelArr[x, screenHeight-y] = (col, col, col)
+            except :
+                print(int(x), screenHeight-y)
+                print("eeeeer")
 
-    # print (delta2)
-    # for y in (v2.y, v3.y):
-    #     while p1.y < y:
-    #         print (y)
-    #         if p1.x > p2.x:
-    #             p3 = p2.copy()
-    #             x = p1.x
-    #         else:
-    #             p3 = p1.copy()
-    #             x = p2.x
-    #         while p3.x < x:
-    #             # print((p3.x+1)*screenWidth/2, screenHeight-((p3.y+1)*screenHeight/2))
-    #             try:
-    #                 pixelArr[p3.x, screenHeight-p3.y] = (255, 255, 255)
-    #             except:
-    #                 print("ERr")
-    #             # try:
-    #                 # pixelArr[(p3.x+1)*screenWidth/2, screenHeight-((p3.y+1)*screenHeight/2)] = (255, 255, 255)
-    #             # except:
-    #             #     print()
-    #             p3.x += 1
-    #         if p1.y+1 <= screenHeight:
-    #             p1.y += 1
-    #         p1.x += delta1
-    #         if p2.y+1 <= screenHeight:
-    #             p2.y += 1
-    #         p2.x += delta2
-    #     delta1 = zeroDiv((v3.x - v2.x), (v3.y - v2.y))
-    #     p1 = v2.copy()
 
 def zeroDiv(a, b):
     return (float(a)/b) if b != 0 else 0
 
-fillTriangle(testArr, pixels, scrX+1, scrY+1)
+fillTriangle(testArr, pixels, scrX, scrY)
 
 
 

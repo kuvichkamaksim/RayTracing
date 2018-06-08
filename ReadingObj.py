@@ -12,7 +12,8 @@ class Vertice(object):
         pixels[self.x, scrY-self.y] = color or (255, 255, 255)
 
     def copy(self):
-        return Vertice(self.x, self.y)
+        return Vertice(self.x, self.y, self.z)
+
 
 class Facet:
     def __init__(self):
@@ -49,9 +50,16 @@ def ReadingObj(f):
             resObj = Facet()
             for vert in tempArr:
                 tempEl = list(map(lambda el: int(el) if len(el) else 0 , vert.split('/')))
-                resObj.vertices.append(vertices[tempEl[0]-1])
-                resObj.texture.append(tempEl[1])
-                resObj.normal.append(verticesNorm[tempEl[2]-1])
+                if (len(tempEl) == 3):
+                    resObj.vertices.append(vertices[tempEl[0]-1])
+                    resObj.texture.append(tempEl[1])
+                    resObj.normal.append(verticesNorm[tempEl[2]-1])
+                else:
+                    resObj.vertices.append(vertices[tempEl[0]-1])
+                    try:
+                        resObj.normal.append(verticesNorm[tempEl[1]-1])
+                    except:
+                        print(tempEl[1]-1)
             # print (resObj.vertices)
             # data = map(lambda dataRow: map(lambda someString: int(someString), dataRow), dataArr)
             facets.append(resObj)
