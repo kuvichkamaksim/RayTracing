@@ -2,7 +2,7 @@ from PIL import Image
 from FillTriangles import fillTriangle
 import math
 import re
-
+from FillTriangles import fillTriangle
 
 def CreateBMP(scrX, scrY, vertices, facets):
     img = Image.new( 'RGB', (scrX+1, scrY+1), "black")
@@ -14,5 +14,5 @@ def CreateBMP(scrX, scrY, vertices, facets):
 
     for facet in facets:
         fillTriangle(facet.vertices, pixels, scrX, scrY, facet.normal)
-
-    img.show()
+   
+img.show()

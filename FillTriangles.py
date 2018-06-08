@@ -55,3 +55,4 @@ def fillTriangle(verts, pixelArr, screenWidth, screenHeight, normals):
 
 def zeroDiv(a, b):
     return (float(a)/b) if b != 0 else 0
+
