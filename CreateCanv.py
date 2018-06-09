@@ -51,4 +51,4 @@ def createCanv(camera, scrX, scrY, direction, distance):
     # print (imagePlane)
     return imagePlane
 
-createCanv(camera, scrX, scrY, direction, distance)
+# createCanv(camera, scrX, scrY, direction, distance)

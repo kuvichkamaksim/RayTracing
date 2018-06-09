@@ -3,14 +3,16 @@ from FillTriangles import fillTriangle
 import math
 import re
 
-def CreateBMP(scrX, scrY, vertices, facets):
-    img = Image.new( 'RGB', (scrX+1, scrY+1), "black")
+def CreateBMP(imageMatrix, srcX, srcY):
+    img = Image.new( 'RGB', (srcX+1, srcY+1), "black")
     pixels = img.load()
-    color = (255,255,255)
 
-    for vertice in vertices:
-        pixels[((vertice[0]+1)*scrX/2), scrY-((vertice[1]+1)*scrY/2)] = color
-
+    # color = (255,255,255)
+    # print (imageMatrix)
+    for y in range(srcY):
+        for x in range(srcX):
+            print (x, y)
+            pixels[x, y] = imageMatrix[x][y]
     # for facet in facets:
     #     fillTriangle(facet.vertices, pixels, scrX, scrY, facet.normal)
 

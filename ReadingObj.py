@@ -77,7 +77,7 @@ def ReadingObj(f):
         vertice[1] = vertice[1]/maxLeng
         vertice[2] = vertice[2]/maxLeng
 
-    for facet in facets:
-        facet.show()
+    # for facet in facets:
+    #     facet.show()
 
     return vertices, facets, verticesNorm

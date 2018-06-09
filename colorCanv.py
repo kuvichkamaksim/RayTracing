@@ -1,3 +1,5 @@
+import random
+import tree
 def colorCanv(cameraPos, lightPos, imagePlane, tree):
     image = [[colorify(cameraPos, pixel, lightPos, tree)
                 for pixel in row]
@@ -19,6 +21,16 @@ def colorify(cameraPos, pixel, lightPos, tree):
     return px
 
 def findIntersections(point1, point2, tree):
-    distance, facet = findIntersection(point1, point2, tree)
+    distance, facet = tree.findInter(point1, point2, tree)
     if distance == float('inf'): return None, None
-    else: return facet['triangle'], facet['normal']
+else: return facet.vertices, facet.normal
+
+def colorifyTest(cameraPos, pixel, lightPos, tree):
+    return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+def render(cameraPos, lightPos, imagePlane, tree):
+    image = [[colorifyTest(cameraPos, pixel, lightPos, tree)
+                for pixel in row]
+                    for row in imagePlane]
+
+    return image
