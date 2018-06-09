@@ -1,14 +1,13 @@
 from PIL import Image
 import math
 import re
-
-def vectorLength(v):
-    return math.sqrt(v.x**2 + v.y**2 + v.z**2)
+import matan
 
 class Facet:
     def __init__(self):
         self.vertices = []
         self.normal = []
+        self.center = []
 
     def show(self):
         for vert in self.vertices:
@@ -31,7 +30,7 @@ def ReadingObj(f):
             x = float(x)
             y = float(y)
             z = float(z)
-            vertices.append( [x,y,z] )
+            vertices.append( [x, y, z] )
             leng = math.sqrt(x**2 + y**2 + z**2)
             if leng > maxLeng:
                 maxLeng = leng
@@ -41,7 +40,7 @@ def ReadingObj(f):
             x = float(x)
             y = float(y)
             z = float(z)
-            verticesNorm.append([x, y, z])
+            verticesNorm.append( [x, y, z] )
 
         if indent == 'f':
             tempArr = line.split(' ')
@@ -59,15 +58,16 @@ def ReadingObj(f):
                         resObj.normal.append(verticesNorm[tempEl[1]-1])
                     except:
                         pass
+
             # print (resObj.vertices)
             # data = map(lambda dataRow: map(lambda someString: int(someString), dataRow), dataArr)
+            resObj.center = matan.facetCenter(resObj.vertices)
             a = b = c = 0
             for norm in resObj.normal:
                 a += norm[0]
                 b += norm[1]
                 c += norm[2]
-            l = math.sqrt(a**2 + b**2 + c**2)
-            resObj.normal = [a/l, b/l, c/l]
+            resObj.normal = matan.normalize([a, b, c])
             # print (resObj.normal)
 
             facets.append(resObj)
