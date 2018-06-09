@@ -43,7 +43,7 @@ def buildTree(facets, level = 0):
     min, max = makeBoundBox(facets)
 
     currNode = Node()
-    currNode.current = midEl
+    currNode.current = facets[midEl]
     currNode.min = min
     currNode.max = max
 
@@ -71,12 +71,16 @@ def findInter(camPos, facetCenter, tree):
     if tree.right != None:
         rightDist = rayBoxIntersection(camPos, facetCenter, [tree.right.min, tree.right.max])
 
+    leftDist, rightDist = float('inf'), float('inf')
+
     if leftDist > rightDist:
         closeDist = rightDist
         farDist = leftDist
     else:
         closeDist = leftDist
         farDist = rightDist
+
+    closeVert, farVert = (), ()
 
     if farDist != float('inf'):
         if farDist == leftDist:
@@ -91,7 +95,7 @@ def findInter(camPos, facetCenter, tree):
         else:
             direction = tree.right
         closeDist, closeVert = findInter(camPos, facetCenter, direction)
-
+    
     currNodeDist = facetDist(camPos, facetCenter, tree.current.vertices)
 
     return min(

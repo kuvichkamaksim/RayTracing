@@ -11,7 +11,7 @@ def CreateBMP(imageMatrix, srcX, srcY):
     # print (imageMatrix)
     for y in range(srcY):
         for x in range(srcX):
-            print (x, y)
+            # print ( type(imageMatrix[x][y]) )
             pixels[x, y] = imageMatrix[x][y]
     # for facet in facets:
     #     fillTriangle(facet.vertices, pixels, scrX, scrY, facet.normal)
