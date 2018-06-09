@@ -29,30 +29,35 @@ def scalarVectorMult(v1, v2):
     z = v1[2] * v2[2]
     return x + y + z
 
-def facetDist(orig, dir, facet): #orig-ray start, dir-ray direction
-    coef = 1e-8
+def facetDist(point1, point2, facet):
+    epsilon = 1e-8
+    
+    origin = point1
+    direction = makeVector(point1, point2)
 
-    v0, v1, v2 = facet
-    e1 = makeVector(v0, v1)
-    e2 = makeVector(v0, v2)
+    edge1 = makeVector(facet[0], facet[1])
+    edge2 = makeVector(facet[0], facet[2])
 
-    pvec = cross(dir, e2)
-    det = scalarVectorMult(e1, pvec)
+    pvec = cross(direction, edge2)
+    det = scalarVectorMult(edge1, pvec)
 
-    if det < coef and det > -coef:
+    if det < epsilon and det > -epsilon:
         return float('inf')
 
-    tvec = makeVector(v0, orig)
+    tvec = makeVector(facet[0], origin)
     u = scalarVectorMult(tvec, pvec) / det
+
     if u < 0 or u > 1:
         return float('inf')
 
-    qvec = cross(tvec, e1)
-    v = scalarVectorMult(dir, qvec) / det
-    if v < 0 or u+v > 1:
+    qvec = cross(tvec, edge1)
+    v = scalarVectorMult(direction, qvec) / det
+
+    if v < 0 or u + v > 1:
         return float('inf')
 
-    return scalarVectorMult(e2, qvec) / det #distance
+    distance = scalarVectorMult(edge2, qvec) / det
+    return distance
 
 def cos(point1, point2, vector):
     x1, y1, z1 = vector

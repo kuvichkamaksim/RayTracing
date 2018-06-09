@@ -4,12 +4,12 @@ from CreateCanv import createCanv
 import colorCanv
 import tree
 
-scrX = 800
-scrY = 800
+scrX = 100
+scrY = 100
 camera = (0.25, -1, 0.3)
 direction = (0, 1, 0)
 lightPos = (10, -10, 10)
-distance = 2
+distance = 0.5
 
 f = open("./data/cow.obj", 'r')
 

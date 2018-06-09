@@ -10,22 +10,23 @@ def colorCanv(cameraPos, lightPos, imagePlane, tree):
     return image
 
 def colorify(cameraPos, pixel, lightPos, tree):
-    px = 255
+    px = (255, 255, 255)
     light = 200
 
     facet, normal = findIntersections(cameraPos, pixel, tree)
 
+    # print( facet, normal )
+
     if facet:
         color = tuple(map(lambda x: (x+1)/2, normal))
-        # color = matan.multiplyVector(matan.vectorSum(normal, matan.ones()), 0.5)
-        px = tuple(map(lambda x: x*255, color))
-        # px = matan.multiplyVector(color, 255)
+        px = tuple(map(lambda x: int(x*255), color))
         # px = buildShadow(lightPos, facet, normal, tree)
 
     return px
 
 def findIntersections(point1, point2, tree):
-    distance, facet = tr.findInter(point1, point2, tree)
+    distance, facet = tr.findIntersection(point1, point2, tree)
+    # print (distance, facet)
     if distance == float('inf'): return None, None
     else: return facet.vertices, facet.normal
 
