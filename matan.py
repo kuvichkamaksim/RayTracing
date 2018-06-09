@@ -29,7 +29,7 @@ def scalarVectorMult(v1, v2):
     z = v1[2] * v2[2]
     return x + y + z
 
-def facetIntersection(orig, dir, facet): #orig-ray start, dir-ray direction
+def facetDist(orig, dir, facet): #orig-ray start, dir-ray direction
     coef = 1e-8
 
     v0, v1, v2 = facet

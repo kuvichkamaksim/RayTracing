@@ -1,4 +1,4 @@
-from matan import facetCenter, facetIntersection, rayBoxIntersection
+from matan import facetCenter, facetDist, rayBoxIntersection
 
 class Node:
     def __init__(self):
@@ -12,6 +12,24 @@ def findMedian(array, axle):
     a = sorted(array, key = lambda x: x.center[axle])
     middleEl = a[ len(array)//2 ]
     return a, array.index(middleEl)
+
+def makeBoundBox(facets):
+    sortedFacets = list(map(lambda facet:
+    sorted(facet.vertices, key = lambda vertice: vertice[0]), facets))
+    xMin = min(sortedFacets, key = lambda facet: facet[0][0])[0][0]
+    xMax = max(sortedFacets, key = lambda facet: facet[2][0])[2][0]
+
+    sortedFacets = list(map(lambda facet:
+    sorted(facet.vertices, key = lambda vertice: vertice[1]), facets))
+    yMin = min(sortedFacets, key = lambda facet: facet[0][1])[0][1]
+    yMax = max(sortedFacets, key = lambda facet: facet[2][1])[2][1]
+
+    sortedFacets = list(map(lambda facet:
+    sorted(facet.vertices, key = lambda vertice: vertice[2]), facets))
+    zMin = min(sortedFacets, key = lambda facet: facet[0][2])[0][2]
+    zMax = max(sortedFacets, key = lambda facet: facet[2][2])[2][2]
+    # print (xMin, xMax, yMin, yMax, zMin, zMax)
+    return [xMin, yMin, zMin], [xMax, yMax, zMax]
 
 def buildTree(facets, level = 0):
     if len(facets) <= 0:
@@ -37,20 +55,46 @@ def buildTree(facets, level = 0):
 
     return currNode
 
-def makeBoundBox(facets):
-    sortedFacets = list(map(lambda facet:
-        sorted(facet.vertices, key = lambda vertice: vertice[0]), facets))
-    xMin = min(sortedFacets, key = lambda facet: facet[0][0])[0][0]
-    xMax = max(sortedFacets, key = lambda facet: facet[2][0])[2][0]
 
-    sortedFacets = list(map(lambda facet:
-        sorted(facet.vertices, key = lambda vertice: vertice[1]), facets))
-    yMin = min(sortedFacets, key = lambda facet: facet[0][1])[0][1]
-    yMax = max(sortedFacets, key = lambda facet: facet[2][1])[2][1]
+def findInter(camPos, facetCenter, tree):
+    dist = rayBoxIntersection(camPos, facetCenter, [tree.min, tree.max])
+    if dist == float('inf'):
+        return dist, None
 
-    sortedFacets = list(map(lambda facet:
-        sorted(facet.vertices, key = lambda vertice: vertice[2]), facets))
-    zMin = min(sortedFacets, key = lambda facet: facet[0][2])[0][2]
-    zMax = max(sortedFacets, key = lambda facet: facet[2][2])[2][2]
-    # print (xMin, xMax, yMin, yMax, zMin, zMax)
-    return [xMin, yMin, zMin], [xMax, yMax, zMax]
+    if tree.left == None and tree.right == None:
+        dist = facetDist(camPos, facetCenter, tree.current.vertices)
+        return dist, tree.current.vertices
+
+    if tree.left != None:
+        leftDist = rayBoxIntersection(camPos, facetCenter, [tree.left.min, tree.left.max])
+
+    if tree.right != None:
+        rightDist = rayBoxIntersection(camPos, facetCenter, [tree.right.min, tree.right.max])
+
+    if leftDist > rightDist:
+        closeDist = rightDist
+        farDist = leftDist
+    else:
+        closeDist = leftDist
+        farDist = rightDist
+
+    if farDist != float('inf'):
+        if farDist == leftDist:
+            direction = tree.left
+        else:
+            direction = tree.right
+        farDist, farVert = findInter(camPos, facetCenter, direction)
+
+    if closeDist != float('inf'):
+        if closeDist == leftDist:
+            direction = tree.left
+        else:
+            direction = tree.right
+        closeDist, closeVert = findInter(camPos, facetCenter, direction)
+
+    currNodeDist = facetDist(camPos, facetCenter, tree.current.vertices)
+
+    return min(
+        [[currNodeDist, tree.current], [closeDist, closeVert], [farDist, farVert]],
+        key = lambda elem: elem[0]
+    )
