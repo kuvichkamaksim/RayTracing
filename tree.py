@@ -95,10 +95,86 @@ def findInter(camPos, facetCenter, tree):
         else:
             direction = tree.right
         closeDist, closeVert = findInter(camPos, facetCenter, direction)
-    
+
     currNodeDist = facetDist(camPos, facetCenter, tree.current.vertices)
 
     return min(
         [[currNodeDist, tree.current], [closeDist, closeVert], [farDist, farVert]],
         key = lambda elem: elem[0]
     )
+
+def findIntersection(point1, point2, tree):
+    intersect = rayBoxIntersection(
+        point1, point2, (tree.min, tree.max)
+    )
+
+    if intersect == float('inf'): return float('inf'), None
+
+    if tree.left == None and tree.right == None:
+        facet = tree.current
+        distance = facetDist(point1, point2, facet.vertices)
+        return distance, facet
+
+    triangle = tree.current.vertices
+    distance = facetDist(point1, point2, triangle)
+
+    intersectLeft = float('inf')
+    intersectRight = float('inf')
+
+    if tree.left != None:
+        intersectLeft = rayBoxIntersection(
+            point1, point2, (tree.left.min, tree.left.max)
+        )
+
+    if tree.right != None:
+        intersectRight = rayBoxIntersection(
+            point1, point2, (tree.right.min, tree.right.max)
+        )
+
+    closest = {
+        'dist': float('inf'),
+        'dir': None
+    }
+
+    further = {
+        'dist': float('inf'),
+        'dir': None
+    }
+
+    if intersectLeft > intersectRight:
+        closest['dist'] = intersectRight
+        further['dist'] = intersectLeft
+        closest['dir'] = 'right'
+        further['dir'] = 'left'
+    else:
+        closest['dist'] = intersectLeft
+        further['dist'] = intersectRight
+        closest['dir'] = 'left'
+        further['dir'] = 'right'
+
+    distC, triangleC = float('inf'), ()
+    distF, triangleF = float('inf'), ()
+
+    if closest['dir'] == 'right':
+        cl = tree.right
+    else:
+        cl = tree.left
+
+    if further['dir'] == 'right':
+        fur = tree.right
+    else:
+        fur = tree.left
+
+    if closest['dist'] != float('inf'):
+        distC, triangleC = findIntersection(point1, point2, cl)
+
+    if further['dist'] != float('inf'):
+        distF, triangleF = findIntersection(point1, point2, fur)
+
+    distances = [
+        (distance, tree.current),
+        (distC, triangleC),
+        (distF, triangleF)
+    ]
+
+    return min(distances, key = lambda x: x[0])
